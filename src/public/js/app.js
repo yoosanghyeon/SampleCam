@@ -58,7 +58,8 @@ async function init(e) {
       await Draw(video,context);
     },41);
   } catch (e) {
-    handleError(e);
+    console.log(e)
+    // handleError(e);
   }
 }
 
