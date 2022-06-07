@@ -1,5 +1,5 @@
-// const socket = io('ws://211.119.132.242:3001/');
-const socket = io('ws://localhost:3001/');
+const socket = io('ws://211.119.132.242:3001/');
+// const socket = io('ws://localhost:3001/');
 socket.connect();
 
 const video = document.querySelector('video');
