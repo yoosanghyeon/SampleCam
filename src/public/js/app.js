@@ -1,5 +1,4 @@
-const socket = io('ws://211.119.132.242:3001/');
-// const socket = io('ws://localhost:3001/');
+const socket = io('ws://211.119.132.242:3001');
 socket.connect();
 
 const video = document.querySelector('video');
@@ -8,8 +7,8 @@ const video = document.querySelector('video');
 var canvas = document.getElementById("preview");
 var context = canvas.getContext('2d');
 
-canvas.width = 900;
-canvas.height = 700;
+canvas.width = 500;
+canvas.height = 500;
 
 context.width = canvas.width;
 context.height = canvas.height;
@@ -55,9 +54,9 @@ async function init(e) {
     if(e){
       e.target.disabled = true;
     }
-    setInterval(function(){
-      Draw(video,context);
-    },0.1);
+    setInterval(async function(){
+      await Draw(video,context);
+    },41);
   } catch (e) {
     handleError(e);
   }
@@ -68,8 +67,35 @@ init();
 
 
 
-function Draw(video,context){
-  context.drawImage(video,0,0,640,480);
-  // console.log(canvas.toDataURL('image/webp'))
-  socket.emit("video", canvas.toDataURL('image/webp'));
+async function Draw(video,context){
+  context.drawImage(video,0,0,500,500);
+  await getJpegBytes(canvas).then((data) =>{
+    socket.volatile.emit("stream", data)
+  }).catch(error => {
+    console.log(error)
+  })
+}
+
+// function Draw(video,context){
+//   context.drawImage(video,0,0,300,300);
+//   // console.log(canvas.toDataURL('image/webp'))
+//   socket.emit("stream", canvas.toDataURL('image/jpeg'));
+// }
+
+
+
+async function getJpegBytes(canvas) {
+  return new Promise((resolve, reject) => {
+    const fileReader = new FileReader()
+
+    fileReader.addEventListener('loadend', function () {
+      if (this.error) {
+        reject(this.error)
+      } else {
+        resolve(this.result)
+      }
+    })
+
+    canvas.toBlob(blob => fileReader.readAsArrayBuffer(blob), 'image/jpeg')
+  })
 }
