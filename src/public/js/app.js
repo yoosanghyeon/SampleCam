@@ -1,4 +1,5 @@
-const socket = io('ws://211.119.132.242:3001');
+// const socket = io('ws://211.119.132.242:3001');
+const socket = io('ws://localhost:3001');
 socket.connect();
 
 const video = document.querySelector('video');
@@ -93,7 +94,10 @@ async function getJpegBytes(canvas) {
       if (this.error) {
         reject(this.error)
       } else {
-        resolve(this.result)
+        // 순서
+        // Canvas -> arrayBuffer -> ByteBuffer 40kb
+        var bytes = new Uint8Array(this.result);
+        resolve(bytes);
       }
     })
 
