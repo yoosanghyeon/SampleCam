@@ -9,7 +9,7 @@ const app = express();
 
 
 
-const port = 2000;
+const port = 3002;
 
 app.set("view engine", "pug");
 app.set("views", __dirname + "/views");
